@@ -4,7 +4,7 @@ import { Message } from './Message';
 import { Participant } from './Participant';
 
 export class Chat extends AggregateRoot {
-  public build(messages: Message[], participants: Participant[]): Chat {
+  public static build(messages: Message[], participants: Participant[]): Chat {
     return new Chat(Id.generate(), messages, participants);
   }
 
