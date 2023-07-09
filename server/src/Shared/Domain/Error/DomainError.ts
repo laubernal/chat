@@ -1,7 +1,7 @@
-import { ErrorCode, ErrorSerialization } from '../constants';
+import { ErrorSerialization } from '../constants';
 
 export abstract class DomainError extends Error {
-  public abstract errorCode: ErrorCode;
+  // public abstract errorCode: ErrorCode;
 
   public readonly occurredOn: Date = new Date();
 
@@ -15,7 +15,7 @@ export abstract class DomainError extends Error {
     return [
       {
         errorType: this.constructor.name,
-        errorCode: this.errorCode,
+        // errorCode: this.errorCode,
         occurredOn: this.occurredOn,
         message: this.message,
         stack: this.stack?.split('\n').map((trace: string) => trace.trim()),
