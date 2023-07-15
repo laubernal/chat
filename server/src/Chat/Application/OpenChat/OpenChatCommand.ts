@@ -1,8 +1,8 @@
 import { ICommand } from '@nestjs/cqrs';
 
-export class CreateChatCommand implements ICommand {
-  public static fromJson(body: any): CreateChatCommand {
-    return new CreateChatCommand(body.name, body.phone);
+export class OpenChatCommand implements ICommand {
+  public static fromJson(body: any): OpenChatCommand {
+    return new OpenChatCommand(body.name, body.phone);
   }
 
   constructor(

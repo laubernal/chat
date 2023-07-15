@@ -4,14 +4,14 @@ import { Message } from './Message';
 import { Participant } from './Participant';
 
 export class Chat extends AggregateRoot {
-  public static build(messages: Message[], participants: Participant[]): Chat {
-    return new Chat(Id.generate(), messages, participants);
+  public static build(messages: Message[], participant: Participant): Chat {
+    return new Chat(Id.generate(), messages, participant);
   }
 
   constructor(
     _id: Id,
     private readonly _messages: Message[],
-    private readonly _participants: Participant[],
+    private readonly _participant: Participant,
     _createdAt?: Date,
     _updatedAt?: Date,
   ) {
@@ -22,7 +22,7 @@ export class Chat extends AggregateRoot {
     return this._messages;
   }
 
-  public participants(): Participant[] {
-    return this._participants;
+  public participant(): Participant {
+    return this._participant;
   }
 }

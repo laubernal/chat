@@ -1,28 +1,35 @@
 import { CommandHandler } from '@nestjs/cqrs';
-import { CreateChatCommand } from './CreateChatCommand';
+import { OpenChatCommand } from './OpenChatCommand';
 import { IChatRepository } from 'src/Chat/Domain/Repository/IChatRepository';
 import { Chat } from 'src/Chat/Domain/Entity/Chat';
 import { Participant } from 'src/Chat/Domain/Entity/Participant';
 import { Name } from 'src/Shared/Domain/Vo/Name';
 import { ChatFilter } from 'src/Chat/Domain/Filter/ChatFilter';
 import { ChatAlreadyExists } from 'src/Chat/Domain/Error/ChatAlreadyExistsError';
+import { OpenChatResponse } from './OpenChatResponse';
 
-@CommandHandler(CreateChatCommand)
-export class CreateChatCommandHandler {
+@CommandHandler(OpenChatCommand)
+export class OpenChatCommandHandler {
   constructor(private readonly repository: IChatRepository) {}
 
-  public async execute(command: CreateChatCommand) {
+  public async execute(
+    command: OpenChatCommand,
+  ): Promise<OpenChatResponse | undefined> {
     try {
       const participant = Participant.build(
         new Name(command.participantName),
         command.participantPhone,
       );
 
-      await this.ensureChatNotExists(participant);
+      const chat = await this.findChat(participant);
 
-      const chat = Chat.build([], [participant]);
+      if (typeof chat !== 'undefined') {
+        return OpenChatResponse.toResponse(chat);
+      }
 
-      await this.repository.save(chat);
+      const newChat = Chat.build([], participant);
+
+      await this.repository.save(newChat);
     } catch (error: any) {
       if (error instanceof ChatAlreadyExists) {
         return;
@@ -30,13 +37,11 @@ export class CreateChatCommandHandler {
     }
   }
 
-  private async ensureChatNotExists(participant: Participant): Promise<void> {
+  private async findChat(participant: Participant): Promise<Chat> {
     const filter = ChatFilter.build().withParticipant(participant);
 
     const result = await this.repository.findOne(filter);
 
-    if (typeof result !== 'undefined') {
-      throw new ChatAlreadyExists();
-    }
+    return result;
   }
 }
