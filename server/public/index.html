@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket.io Test</title>
+  </head>
+  <body>
+    <h1>Socket.io Test</h1>
+
+    <button onclick="connectSocket()">Connect</button>
+
+    <button onclick="disconnectSocket()">Disconnect</button>
+
+    <input type="text" id="messageInput" placeholder="Enter your message" />
+
+    <button onclick="sendMessage()">Send</button>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+      let socket;
+
+      function connectSocket() {
+        socket = io();
+
+        socket.on('connect', () => {
+          console.log('Connected to the WebSocket server');
+        });
+
+        socket.on('disconnect', () => {
+          console.log('Disconnected from the WebSocket server');
+        });
+      }
+
+      function disconnectSocket() {
+        if (socket) {
+          socket.disconnect();
+          console.log('Manually disconnected from the WebSocket server');
+        } else {
+          console.log('Socket is not connected');
+        }
+      }
+
+      function sendMessage() {
+        const messageInput = document.getElementById('messageInput');
+        const message = messageInput.value;
+
+        // Log the message to the console
+        console.log('Message sent:', message);
+
+        // You can also send the message to the server if needed
+        socket.emit('chat message', message);
+      }
+    </script>
+  </body>
+</html>

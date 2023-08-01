@@ -1,4 +1,5 @@
 import { CommandHandler } from '@nestjs/cqrs';
+import { Inject } from '@nestjs/common';
 import { OpenChatCommand } from './OpenChatCommand';
 import { IChatRepository } from 'src/Chat/Domain/Repository/IChatRepository';
 import { Chat } from 'src/Chat/Domain/Entity/Chat';
@@ -7,10 +8,13 @@ import { Name } from 'src/Shared/Domain/Vo/Name';
 import { ChatFilter } from 'src/Chat/Domain/Filter/ChatFilter';
 import { ChatAlreadyExists } from 'src/Chat/Domain/Error/ChatAlreadyExistsError';
 import { OpenChatResponse } from './OpenChatResponse';
+import { ICHAT_REPOSITORY } from 'src/Shared/constants';
 
 @CommandHandler(OpenChatCommand)
 export class OpenChatCommandHandler {
-  constructor(private readonly repository: IChatRepository) {}
+  constructor(
+    @Inject(ICHAT_REPOSITORY) private readonly repository: IChatRepository,
+  ) {}
 
   public async execute(
     command: OpenChatCommand,

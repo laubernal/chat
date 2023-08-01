@@ -1,0 +1,1 @@
+export const ICHAT_REPOSITORY = 'IChatRepository'

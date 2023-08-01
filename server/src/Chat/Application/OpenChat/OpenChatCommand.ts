@@ -1,7 +1,8 @@
 import { ICommand } from '@nestjs/cqrs';
+import { OpenChatApiRequest } from 'src/Chat/Infrastructure/Controller/OpenChat/OpenChatApiRequest';
 
 export class OpenChatCommand implements ICommand {
-  public static fromJson(body: any): OpenChatCommand {
+  public static fromJson(body: OpenChatApiRequest): OpenChatCommand {
     return new OpenChatCommand(body.name, body.phone);
   }
 
