@@ -16,13 +16,11 @@ async function bootstrap() {
   const io = new Server(httpServer);
 
   io.on('connection', (socket) => {
-    console.log('Socket connected...');
+    console.log('Socket connected...', socket.id);
 
-    socket.on('chat message', (message) => {
-      console.log('Received chat message:', message);
-      // You can now process the message on the server as needed
-      // For example, you can broadcast the message to all connected clients
-      // io.emit('chat message', message);
+    socket.on('chat message', (msg) => {
+      console.log('Received chat message:', msg);
+      io.emit('chat message', msg);
     });
 
     socket.on('disconnecting', (reason) => {
@@ -33,7 +31,7 @@ async function bootstrap() {
         }
       }
 
-      console.log('Disconnecting socket...', socket.rooms); // the Set contains at least the socket ID
+      console.log('Disconnecting socket...', socket.rooms);
     });
 
     socket.on('disconnect', () => {
@@ -44,4 +42,5 @@ async function bootstrap() {
 
   httpServer.listen(3000);
 }
+
 bootstrap();
