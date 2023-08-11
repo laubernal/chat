@@ -15,12 +15,32 @@ async function bootstrap() {
 
   const io = new Server(httpServer);
 
+  io.use((socket, next) => {
+    const username = socket;
+
+    if (!username) {
+      return next(new Error('invalid username'));
+    }
+
+    socket.data.name = username;
+
+    next();
+  });
+
   io.on('connection', (socket) => {
     console.log('Socket connected...', socket.id);
 
-    socket.on('chat message', (msg) => {
-      console.log('Received chat message:', msg);
-      io.emit('chat message', msg);
+    socket.on('private message', ({ content, to }) => {
+      console.log('Received chat message:', content);
+      console.log('To', to);
+      io.emit('private message', {
+        content,
+        from: socket.id,
+      });
+      // socket.to(to).emit('private message', {
+      //   content,
+      //   from: socket.id,
+      // });
     });
 
     socket.on('disconnecting', (reason) => {

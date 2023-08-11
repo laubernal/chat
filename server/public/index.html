@@ -29,25 +29,41 @@
   <body>
     <h1>Socket.io Test</h1>
 
+    <p>Select your name</p>
+
+    <select id="name">
+      <option disabled selected value>-- Select your name --</option>
+      <option value="Laura">Laura</option>
+      <option value="Adri">Adri</option>
+    </select>
+
     <ul id="messages"></ul>
 
     <form id="form" action="">
+      <p>Enter your message</p>
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
 
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
-      let socket = io();
+      let socket = io('http://localhost:3000', { autoConnect: false });
 
       const messages = document.getElementById('messages');
       const form = document.getElementById('form');
       const input = document.getElementById('input');
+      const name = document.getElementById('name');
+
+      name.addEventListener('change', () => {
+        console.log('NAME', name.value);
+        socket.auth = { name: name.value };
+        socket.connect();
+      });
 
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         if (input.value) {
-          socket.emit('chat message', input.value);
+          socket.emit('private message', { content: input.value, to: 'Adri' });
           input.value = '';
         }
       });
@@ -60,10 +76,17 @@
         console.log('Disconnected from the WebSocket server');
       });
 
-      socket.on('chat message', function (msg) {
-        var item = document.createElement('li');
+      socket.on('connect_error', (err) => {
+        if (err.message === 'invalid username') {
+          console.log('INVALID USERNAME');
+          // socket.off("connect_error");
+        }
+      });
 
-        item.textContent = msg;
+      socket.on('private message', function ({ content, from }) {
+        var item = document.createElement('li');
+        console.log('FROM', from);
+        item.textContent = content;
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
