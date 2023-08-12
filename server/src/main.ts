@@ -31,23 +31,19 @@ async function bootstrap() {
     console.log('Socket connected...', socket.id);
 
     socket.on('private message', ({ content, to }) => {
-      console.log('Received chat message:', content);
-      console.log('To', to);
+      console.log(`Received chat message: ${content} - ${to}`);
+
       io.emit('private message', {
         content,
         from: socket.id,
       });
-      // socket.to(to).emit('private message', {
-      //   content,
-      //   from: socket.id,
-      // });
     });
 
     socket.on('disconnecting', (reason) => {
-      console.log(reason);
+      console.log(`Reason for disconnecting: ${reason}`);
       for (const room of socket.rooms) {
         if (room !== socket.id) {
-          socket.to(room).emit('user has left', socket.id);
+          socket.to(room).emit(`user ${socket.id} has left`);
         }
       }
 
@@ -56,7 +52,7 @@ async function bootstrap() {
 
     socket.on('disconnect', () => {
       // socket.rooms.size === 0
-      console.log('Socket disconnected...');
+      console.log(`Socket ${socket.id} disconnected...`);
     });
   });
 
