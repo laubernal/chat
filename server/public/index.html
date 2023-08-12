@@ -63,10 +63,8 @@
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         if (input.value) {
-          console.log('HEREEE - ', input.value);
           socket.emit('private message', { content: input.value, to: 'Adri' });
           input.value = '';
-          console.log('HERE', input.value);
         }
       });
 
