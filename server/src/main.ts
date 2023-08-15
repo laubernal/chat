@@ -9,11 +9,17 @@ async function bootstrap() {
 
   app.use(express.static('public'));
 
+  app.enableCors();
+
   const expressApp = app.getHttpAdapter().getInstance();
 
   const httpServer = http.createServer(expressApp);
 
-  const io = new Server(httpServer);
+  const io = new Server(httpServer, {
+    cors: {
+      origin: 'http://127.0.0.1:5173',
+    },
+  });
 
   io.use((socket, next) => {
     const username = socket;

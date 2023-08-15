@@ -18,6 +18,6 @@ export class OpenChatController {
 
     await this.commandBus.execute(command);
 
-    res.sendFile('index.html', { root: 'public' });
+    // res.sendFile('index.html', { root: 'public' });
   }
 }
