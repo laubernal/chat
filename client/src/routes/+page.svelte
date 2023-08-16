@@ -58,48 +58,48 @@
   });
 </script>
 
-<body>
+<main>
   <h1>Chat app</h1>
 
-  <p>Select your name</p>
+  <body>
+    <p>Select your name</p>
 
-  <select id="name" on:change={handleName}>
-    <option disabled selected value>-- Select your name --</option>
-    <option value="Laura">Laura</option>
-    <option value="Adri">Adri</option>
-  </select>
+    <select id="name" on:change={handleName}>
+      <option disabled selected value>-- Select your name --</option>
+      <option value="Laura">Laura</option>
+      <option value="Adri">Adri</option>
+    </select>
 
-  <ul id="messages" />
+    <div>
+      <ul id="messages">
+        <li style="display: none;" />
+      </ul>
+    </div>
 
-  <form id="form" action="" on:submit|preventDefault={handleInput}>
-    <p>Enter your message</p>
-    <input id="input" autocomplete="off" bind:value={message} />
-    <button type="submit">Send</button>
-  </form>
-</body>
+    <form id="form" action="" on:submit|preventDefault={handleInput}>
+      <input id="input" autocomplete="off" placeholder="Enter your message" bind:value={message} />
+      <button type="submit">Send</button>
+    </form>
+  </body>
+</main>
 
 <style>
-  button {
-    margin-left: 50;
+  main {
+    margin: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   }
 
-  body {
-    margin: 5;
-    padding-bottom: 3rem;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  button {
+    margin-left: 5px;
+  }
+
+  #form {
+    margin-top: 20px;
   }
 
   #messages {
     list-style-type: none;
     margin: 0;
     padding: 0;
-  }
-
-  #messages > li {
-    padding: 0.5rem 1rem;
-  }
-
-  #messages > li:nth-child(odd) {
-    background: #efefef;
   }
 </style>
