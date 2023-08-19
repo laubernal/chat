@@ -1,16 +1,9 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import socket from '$lib/utils/Socket';
-  import { redirect } from '@sveltejs/kit';
   import { username } from '../../stores/AuthenticationStores';
-  import { onDestroy } from 'svelte';
 
   let message = '';
-
-  //   $: if ($username === '') {
-  //     console.log('No username', socket.disconnected);
-  //     throw redirect(300, '/');
-  //   }
 
   const handleInput = () => {
     if (message) {
@@ -24,6 +17,7 @@
   };
 
   socket.on('private message', function ({ content, from }) {
+    console.log('private message');
     let item = document.createElement('li');
 
     item.textContent = content;
@@ -33,6 +27,11 @@
     messages!.appendChild(item);
 
     window.scrollTo(0, document.body.scrollHeight);
+  });
+
+  socket.on('disconnect', function (reason) {
+    console.log('DISCONNECTED...', reason);
+    goto('/');
   });
 </script>
 
@@ -44,6 +43,18 @@
         <li style="display: none;" />
       </ul>
     </div>
+
+    <button
+      on:click={() => {
+        socket.connect();
+      }}>Connect</button
+    >
+
+    <button
+      on:click={() => {
+        socket.disconnect();
+      }}>Disconnect</button
+    >
 
     <form id="form" action="" on:submit|preventDefault={handleInput}>
       <input
@@ -71,13 +82,23 @@
 
   #form {
     margin-top: 100px;
+    display: grid;
+
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    width: 100%;
   }
 
   #messageInput {
-    width: 90vw;
+    padding: 10px;
+    width: 100%;
   }
 
   #submitButton {
-    margin-left: 5px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
   }
 </style>

@@ -40,10 +40,7 @@
       console.log('INVALID USERNAME');
       // socket.off("connect_error");
     }
-  });
-
-  socket.on('connect_error', () => {
-    console.log('ERROR CONNECTING...');
+    console.log('ERROR CONNECTING...', err);
   });
 </script>
 
@@ -51,7 +48,7 @@
   <h1>Chat app</h1>
 
   <body>
-       <Chat />
+    <Chat />
   </body>
 </main>
 
